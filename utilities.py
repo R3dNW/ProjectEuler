@@ -135,19 +135,25 @@ def prime_factors_of(value):
     return factors
 
 
+def collected_prime_factors_of(value):
+    factors_list = prime_factors_of(value)
+
+    collected_factors = {}
+
+    for factor in factors_list:
+        if factor in collected_factors.keys():
+            collected_factors[factor] += 1
+        else:
+            collected_factors[factor] = 1
+
+    return collected_factors
+
+
 def lcm(*args):
     all_prime_factors = {}
 
     for arg in args:
-        factors_list = prime_factors_of(arg)
-
-        collected_factors = {}
-
-        for factor in factors_list:
-            if factor in collected_factors.keys():
-                collected_factors[factor] += 1
-            else:
-                collected_factors[factor] = 1
+        collected_factors = collected_prime_factors_of(arg)
 
         for factor in collected_factors.keys():
             if factor in all_prime_factors:
@@ -183,3 +189,36 @@ def sieve_primes_below(maximum=2000000):
         index += 1
 
     return primes_list
+
+
+triangle_number_cache = [1]
+
+
+def nth_triangle_number(n):
+    for i in range(len(triangle_number_cache) + 1, n + 1):
+        triangle_number_cache.append(triangle_number_cache[-1] + i)
+
+    return triangle_number_cache[n - 1]
+
+
+collatz_cache = {}
+
+
+def collatz_length(n):
+    if n == 1:
+        return 0
+
+    if n in collatz_cache.keys():
+        return collatz_cache[n]
+
+    if n % 2 == 0:
+        n /= 2
+    else:
+        n = 3 * n + 1
+
+    chain_length = 1 + collatz_length(n)
+
+    if n not in collatz_cache:
+        collatz_cache[n] = chain_length
+
+    return chain_length
