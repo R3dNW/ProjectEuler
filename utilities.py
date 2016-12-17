@@ -161,3 +161,25 @@ def lcm(*args):
         result *= factor ** all_prime_factors[factor]
 
     return result
+
+
+def sieve_primes_below(maximum=2000000):
+    primes_list = list(range(2, maximum))
+
+    index = 0
+    prime = 0
+
+    while prime ** 2 < maximum:
+        prime = primes_list[index]
+
+        new_primes_list = []
+
+        for value in primes_list:
+            if value % prime != 0 or value == prime:
+                new_primes_list.append(value)
+
+        primes_list = new_primes_list
+
+        index += 1
+
+    return primes_list
