@@ -22,13 +22,23 @@ def multiples_of(*nums, minimum=0, maximum=1000):
     return results
 
 
-def fibonacci(U0=1, U1=2, maxiumum=4000000):
-    results = [U0, U1]
+def fibonacci(u1=1, u2=2, maximum=4000000):
+    results = [u1, u2]
 
-    while results[-1] <= maxiumum:
+    while results[-1] <= maximum:
         results.append(results[-1] + results[-2])
 
     return results
+
+
+def fibonacci_up_to_digits(u1=1, u2=2, digits=1000):
+    results = [u1, u2]
+
+    while len(str(results[-1])) <= digits:
+        results.append(results[-1] + results[-2])
+
+    return results
+
 
 
 def sieve_primes_below(maximum=2000000):
@@ -56,9 +66,9 @@ def sieve_primes_below(maximum=2000000):
 primes_cache = sieve_primes_below(100000)
 
 
-def check_prime(value):
-    if value in primes_cache:
-        return True
+def is_prime(value):
+    #if value in primes_cache:
+    #    return True
 
     if value == 2:
         return True
@@ -70,6 +80,9 @@ def check_prime(value):
     last_factor_checked = 2
 
     for prime in primes_cache:
+        if prime == value:
+            return True
+
         if prime > check_factors_up_to:
             return True
 
@@ -90,7 +103,7 @@ def check_prime(value):
 
 def primes_below(minimum=0, maximum=1000):
     def sub(i):
-        if check_prime(i):
+        if is_prime(i):
             primes_cache.append(i)
 
     maximum = int(maximum)
@@ -118,7 +131,7 @@ def primes_below(minimum=0, maximum=1000):
 
 def find_nth_prime(n):
     def sub(i):
-        if check_prime(i):
+        if is_prime(i):
             primes_cache.append(i)
 
     if len(primes_cache) - 1 > n:
