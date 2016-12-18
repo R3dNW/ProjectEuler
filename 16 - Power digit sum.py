@@ -1,10 +1,3 @@
-value = 2 ** 1000
+import utilities
 
-string = str(value)
-
-sum = 0
-
-for digit in string:
-    sum += int(digit)
-
-print(sum)
+print(utilities.sum_of_digits(2 ** 1000))

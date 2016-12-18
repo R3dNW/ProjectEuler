@@ -1,5 +1,9 @@
 import threading
 
+alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+            "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+            "u", "v", "w", "x", "y", "z"]
+
 
 def multiples_of(*nums, minimum=0, maximum=1000):
     results = []
@@ -27,7 +31,29 @@ def fibonacci(U0=1, U1=2, maxiumum=4000000):
     return results
 
 
-primes_cache = [2]
+def sieve_primes_below(maximum=2000000):
+    primes_list = list(range(2, maximum))
+
+    index = 0
+    prime = 0
+
+    while prime ** 2 < maximum:
+        prime = primes_list[index]
+
+        new_primes_list = []
+
+        for value in primes_list:
+            if value % prime != 0 or value == prime:
+                new_primes_list.append(value)
+
+        primes_list = new_primes_list
+
+        index += 1
+
+    return primes_list
+
+
+primes_cache = sieve_primes_below(100000)
 
 
 def check_prime(value):
@@ -114,6 +140,9 @@ def prime_factors_of(value):
 
     value = abs(value)
 
+    if value in [1, 0]:
+        return None
+
     while value != 1:
         for minimum in range(0, int(value / 2) + 1, 1000):
             primes = primes_below(minimum, minimum + 1000)
@@ -136,6 +165,11 @@ def prime_factors_of(value):
 
 
 def collected_prime_factors_of(value):
+    value = abs(value)
+
+    if value in [1, 0]:
+        return None
+
     factors_list = prime_factors_of(value)
 
     collected_factors = {}
@@ -147,6 +181,58 @@ def collected_prime_factors_of(value):
             collected_factors[factor] = 1
 
     return collected_factors
+
+
+def all_factors_of(num):
+    if num == 1:
+        return [1]
+
+    if num == 0:
+        return [0]
+
+    if num == -1:
+        return [-1]
+
+    prime_factorisation = prime_factors_of(num)
+
+    factors = []
+
+    if num < 0:
+        factors.append(-1)
+
+    for i in range(0, 2 ** len(prime_factorisation)):
+        pattern = str(bin(i))[2:]
+
+        product = 1
+
+        for x in range(0, len(pattern), 1):
+            if pattern[-x - 1] == "1":
+                product *= prime_factorisation[-x - 1]
+
+        if product not in factors:
+            factors.append(product)
+
+    return sorted(factors)
+
+
+def sum_of_proper_divisors(n):
+    factors = all_factors_of(n)
+
+    factors.remove(n)
+
+    return sum(factors)
+
+
+def check_perfect(num):
+    return num == sum_of_proper_divisors(num)
+
+
+def check_abundant(num):
+    return sum_of_proper_divisors(num) > num
+
+
+def check_deficient(num):
+    return sum_of_proper_divisors(num) < num
 
 
 def lcm(*args):
@@ -167,28 +253,6 @@ def lcm(*args):
         result *= factor ** all_prime_factors[factor]
 
     return result
-
-
-def sieve_primes_below(maximum=2000000):
-    primes_list = list(range(2, maximum))
-
-    index = 0
-    prime = 0
-
-    while prime ** 2 < maximum:
-        prime = primes_list[index]
-
-        new_primes_list = []
-
-        for value in primes_list:
-            if value % prime != 0 or value == prime:
-                new_primes_list.append(value)
-
-        primes_list = new_primes_list
-
-        index += 1
-
-    return primes_list
 
 
 triangle_number_cache = [1]
@@ -222,3 +286,14 @@ def collatz_length(n):
         collatz_cache[n] = chain_length
 
     return chain_length
+
+
+def sum_of_digits(num):
+    string = str(num)
+
+    sum = 0
+
+    for digit in string:
+        sum += int(digit)
+
+    return sum
